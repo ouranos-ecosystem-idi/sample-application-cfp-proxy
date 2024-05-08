@@ -1,0 +1,16 @@
+map $http_x_requested_with $proxy_destination {
+  default http://127.0.0.1:3000;
+  ~*xhr http://127.0.0.1:8080/common-backend;
+}
+
+server {
+    listen       80;
+    listen  [::]:80;
+
+    location / {
+      client_max_body_size 10M;
+      proxy_buffering off;
+      proxy_pass $proxy_destination$request_uri;
+      proxy_read_timeout 300;
+    }
+}
